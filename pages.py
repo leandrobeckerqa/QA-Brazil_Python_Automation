@@ -33,6 +33,21 @@ class UrbanRoutesPage:
     close_button_card = (By.CSS_SELECTOR, '.payment-picker.open .close-button')
     confirm_card = (By.CSS_SELECTOR, '.pp-value-text')
 
+    #Comentário
+    add_comment = (By.ID, 'comment')
+
+    #Cobertor e lençóis
+    switch_cobertor = (By.CSS_SELECTOR, ".switch")
+    switch_cobertor_active = (By.CSS_SELECTOR,
+                             '#root > div > div.workflow > div.workflow-subcontainer > div.tariff-picker.shown > div.form > div.reqs.open > div.reqs-body > div:nth-child(1) > div > div.r-sw > div > span')
+
+    #2 sorvetes
+    add_icecream = (By.CSS_SELECTOR, ".counter-plus")
+    qnt_icecream = (By.CSS_SELECTOR, ".counter-value")
+
+    #Chamar taxi (validação do modal)
+    call_taxi_button = (By.CSS_SELECTOR, '.smart-button')
+    pop_up = (By.CSS_SELECTOR, '.order-header-title')
 
     def __init__(self,driver):
         self.driver = driver
@@ -103,4 +118,32 @@ class UrbanRoutesPage:
 
     def confirm_cartao(self):
         return self.driver.find_element(*self.confirm_card).text
+
+    def add_comentario(self,comentario):
+        self.driver.find_element(*self.add_comment).send_keys(comentario)
+
+    def comment_confirm(self):
+        return self.driver.find_element(*self.add_comment).get_attribute('value')
+
+    def switch_cobertor(self):
+        switch_active = self.driver.find_element(*self.switch_cobertor)
+
+    def switch_cobertor_active(self):
+        switch = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located(self.switch_cobertor_active()))
+        return switch.is_selected()
+
+    def add_ice(self):
+        self.driver.find_element(*self.add_icecream).click()
+
+    def qnt_sorvete(self):
+        return self.driver.find_element(*self.qnt_icecream).text
+
+    def call_taxi(self):
+        self.driver.find_element(*self.call_taxi_button).click()
+
+    def pop_up_show(self):
+        pop_up = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((self.pop_up)))
+        return pop_up.text
+
 

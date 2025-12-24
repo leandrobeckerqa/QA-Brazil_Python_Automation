@@ -55,27 +55,51 @@ class TestUrbanRoutes:
         routes_page.click_taxi_options()
         routes_page.click_comfort_icon()
         routes_page.click_add_cartao(data.CARD_NUMBER, data.CARD_CODE)
-        assert "Card" in routes_page.confirm_cartao()
+        assert "Card" in routes_page.confirm_cartao() #Revisor : Por algum motivo, meu chrome estava em inglês ! Então troquei pela palavra "Card".
 
     def test_comment_for_driver(self):
-        pass
+        self.driver.get(data.URBAN_ROUTES_URL)
+        routes_page = UrbanRoutesPage(self.driver)
+        routes_page.enter_locations(data.ADDRESS_FROM, data.ADDRESS_TO)
+        routes_page.click_taxi_options()
+        routes_page.click_comfort_icon()
+        routes_page.add_comentario(data.MESSAGE_FOR_DRIVER)
+        assert data.MESSAGE_FOR_DRIVER in routes_page.comment_confirm()
 
     def test_order_blanket_and_handkerchiefs(self):
-        # Adicionar em S8
-        print("função criada para enviar pedidos de cobertor e guardanapos")
-        pass
+        self.driver.get(data.URBAN_ROUTES_URL)
+        routes_page = UrbanRoutesPage(self.driver)
+        routes_page.enter_locations(data.ADDRESS_FROM, data.ADDRESS_TO)
+        routes_page.click_taxi_options()
+        routes_page.click_comfort_icon()
+        routes_page.switch_cobertor()
+        assert routes_page.switch_cobertor_active() is True
 
     def test_order_2_ice_creams(self):
+        self.driver.get(data.URBAN_ROUTES_URL)
+        routes_page = UrbanRoutesPage(self.driver)
+        routes_page.enter_locations(data.ADDRESS_FROM, data.ADDRESS_TO)
+        routes_page.click_taxi_options()
+        routes_page.click_comfort_icon()
         number_of_ice_creams = 2
-        for count in range(number_of_ice_creams):
-            # Adicionar em S8
-            print("função criada para enviar pedido de sorvete")
-            pass
+        for _ in range(2):
+            routes_page.add_ice()
+        assert int(routes_page.qnt_sorvete()) == 2
+
 
     def test_car_search_model_appears(self):
-        # Adicionar em S8
-        print("função criada para verificar se aparece o modelo do carro")
-        pass
+        self.driver.get(data.URBAN_ROUTES_URL)
+        routes_page = UrbanRoutesPage(self.driver)
+        routes_page.enter_locations(data.ADDRESS_FROM, data.ADDRESS_TO)
+        routes_page.click_taxi_options()
+        routes_page.click_comfort_icon()
+        routes_page.click_number_text(data.PHONE_NUMBER)
+        routes_page.click_add_cartao(data.CARD_NUMBER, data.CARD_CODE)
+        routes_page.add_comentario(data.MESSAGE_FOR_DRIVER)
+        routes_page.call_taxi()
+        popup_texto = routes_page.pop_up_show()
+        assert any(termo in popup_texto for termo in ["Buscar carro", "Car search", "buscar", "search"]) #Revisor : Meu Urban Routes vive mudando a lingua sozinho, então peguei esse código pra ajudar !
+
 
     @classmethod
     def teardown_class(cls):
